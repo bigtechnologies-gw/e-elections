@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="voteAppModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="voteAppEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="regions" EntityType="voteAppModel.region" />
+    <EntitySet Name="sectors" EntityType="voteAppModel.sector" />
+    <EntitySet Name="partidos" EntityType="voteAppModel.partido" />
+    <AssociationSet Name="regionsector" Association="voteAppModel.regionsector">
+      <End Role="region" EntitySet="regions" />
+      <End Role="sector" EntitySet="sectors" />
+    </AssociationSet>
+    <EntitySet Name="CEs" EntityType="voteAppModel.CE" />
+    <EntitySet Name="voteTables" EntityType="voteAppModel.voteTable" />
+    <AssociationSet Name="CEvoteTable" Association="voteAppModel.CEvoteTable">
+      <End Role="CE" EntitySet="CEs" />
+      <End Role="voteTable" EntitySet="voteTables" />
+    </AssociationSet>
+    <AssociationSet Name="sectorCE" Association="voteAppModel.sectorCE">
+      <End Role="sector" EntitySet="sectors" />
+      <End Role="CE" EntitySet="CEs" />
+    </AssociationSet>
+    <EntitySet Name="votes" EntityType="voteAppModel.vote" />
+    <EntitySet Name="Provinces" EntityType="voteAppModel.Province" />
+    <EntitySet Name="Users" EntityType="voteAppModel.User" />
+    <AssociationSet Name="Provinceregion" Association="voteAppModel.Provinceregion">
+      <End Role="Province" EntitySet="Provinces" />
+      <End Role="region" EntitySet="regions" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="region">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="sectors" Relationship="voteAppModel.regionsector" FromRole="region" ToRole="sector" />
+    <NavigationProperty Name="Province" Relationship="voteAppModel.Provinceregion" FromRole="region" ToRole="Province" />
+  </EntityType>
+  <EntityType Name="sector">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="regionId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="region" Relationship="voteAppModel.regionsector" FromRole="sector" ToRole="region" />
+    <NavigationProperty Name="CEs" Relationship="voteAppModel.sectorCE" FromRole="sector" ToRole="CE" />
+  </EntityType>
+  <EntityType Name="partido">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="regionsector">
+    <End Type="voteAppModel.region" Role="region" Multiplicity="1" />
+    <End Type="voteAppModel.sector" Role="sector" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="region">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="sector">
+        <PropertyRef Name="regionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="CE">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="voteTables" Relationship="voteAppModel.CEvoteTable" FromRole="CE" ToRole="voteTable" />
+    <NavigationProperty Name="sector" Relationship="voteAppModel.sectorCE" FromRole="CE" ToRole="sector" />
+    <Property Name="sectorId" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="voteTable">
+    <Documentation>
+      <LongDescription>mesa de voto</LongDescription>
+    </Documentation>
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="CE" Relationship="voteAppModel.CEvoteTable" FromRole="voteTable" ToRole="CE" />
+    <Property Name="CEId" Type="Int32" Nullable="false" />
+  </EntityType>
+  <Association Name="CEvoteTable">
+    <End Type="voteAppModel.CE" Role="CE" Multiplicity="1" />
+    <End Type="voteAppModel.voteTable" Role="voteTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CE">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="voteTable">
+        <PropertyRef Name="CEId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="sectorCE">
+    <End Type="voteAppModel.sector" Role="sector" Multiplicity="1" />
+    <End Type="voteAppModel.CE" Role="CE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="sector">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CE">
+        <PropertyRef Name="sectorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="vote">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="idSector" />
+      <PropertyRef Name="idRegion" />
+      <PropertyRef Name="idCE" />
+      <PropertyRef Name="idVoteTable" />
+      <PropertyRef Name="idPartido" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="idRegion" Type="Int32" Nullable="false" />
+    <Property Name="idSector" Type="Int32" Nullable="false" />
+    <Property Name="idCE" Type="Int32" Nullable="false" />
+    <Property Name="idVoteTable" Type="Int32" Nullable="false" />
+    <Property Name="idPartido" Type="Int32" Nullable="false" />
+    <Property Name="voteData" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Province">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="Admin" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="region" Relationship="voteAppModel.Provinceregion" FromRole="Province" ToRole="region" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="FullName" Type="String" Nullable="false" />
+    <Property Name="Password" Type="String" Nullable="false" />
+    <Property Name="Enabled" Type="Boolean" Nullable="false" />
+    <Property Name="DateCreation" Type="DateTime" Nullable="false" />
+    <Property Name="OwnerId" Type="Int32" Nullable="false" />
+    <Property Name="Type" Type="voteAppModel.TypeUser" Nullable="false" />
+  </EntityType>
+  <EnumType Name="TypeUser">
+    <Member Name="Admin" />
+    <Member Name="Standard" />
+    <Member Name="Sytem" />
+  </EnumType>
+  <Association Name="Provinceregion">
+    <End Type="voteAppModel.Province" Role="Province" Multiplicity="1" />
+    <End Type="voteAppModel.region" Role="region" Multiplicity="0..1" />
+  </Association>
+</Schema>

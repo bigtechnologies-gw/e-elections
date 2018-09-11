@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="voteAppModelStoreContainer" CdmEntityContainer="voteAppEntities">
+    <EntitySetMapping Name="regions">
+      <EntityTypeMapping TypeName="IsTypeOf(voteAppModel.region)">
+        <MappingFragment StoreEntitySet="regions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sectors">
+      <EntityTypeMapping TypeName="IsTypeOf(voteAppModel.sector)">
+        <MappingFragment StoreEntitySet="sectors">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="regionId" ColumnName="regionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="partidos">
+      <EntityTypeMapping TypeName="IsTypeOf(voteAppModel.partido)">
+        <MappingFragment StoreEntitySet="partidos">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CEs">
+      <EntityTypeMapping TypeName="IsTypeOf(voteAppModel.CE)">
+        <MappingFragment StoreEntitySet="CEs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="sectorId" ColumnName="sectorId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="voteTables">
+      <EntityTypeMapping TypeName="IsTypeOf(voteAppModel.voteTable)">
+        <MappingFragment StoreEntitySet="voteTables">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CEId" ColumnName="CEId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="votes">
+      <EntityTypeMapping TypeName="IsTypeOf(voteAppModel.vote)">
+        <MappingFragment StoreEntitySet="votes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="idSector" ColumnName="idSector" />
+          <ScalarProperty Name="idRegion" ColumnName="idRegion" />
+          <ScalarProperty Name="idCE" ColumnName="idCE" />
+          <ScalarProperty Name="idVoteTable" ColumnName="idVoteTable" />
+          <ScalarProperty Name="idPartido" ColumnName="idPartido" />
+          <ScalarProperty Name="voteData" ColumnName="voteData" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Provinces">
+      <EntityTypeMapping TypeName="IsTypeOf(voteAppModel.Province)">
+        <MappingFragment StoreEntitySet="Provinces">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Admin" ColumnName="Admin" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="IsTypeOf(voteAppModel.User)">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="FullName" ColumnName="FullName" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+          <ScalarProperty Name="DateCreation" ColumnName="DateCreation" />
+          <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="Provinceregion" TypeName="voteAppModel.Provinceregion" StoreEntitySet="regions">
+      <EndProperty Name="Province">
+        <ScalarProperty Name="Id" ColumnName="Province_Id" />
+      </EndProperty>
+      <EndProperty Name="region">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="tempdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="tempdbEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="regions" EntityType="tempdbModel.region" />
+    <EntitySet Name="sectors" EntityType="tempdbModel.sector" />
+    <AssociationSet Name="regionsector" Association="tempdbModel.regionsector">
+      <End Role="region" EntitySet="regions" />
+      <End Role="sector" EntitySet="sectors" />
+    </AssociationSet>
+    <EntitySet Name="partidos" EntityType="tempdbModel.partido" />
+    <EntitySet Name="logins" EntityType="tempdbModel.login" />
+    <EntitySet Name="Votes" EntityType="tempdbModel.Vote" />
+  </EntityContainer>
+  <EntityType Name="region">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="sectors" Relationship="tempdbModel.regionsector" FromRole="region" ToRole="sector" />
+  </EntityType>
+  <EntityType Name="sector">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="region" Relationship="tempdbModel.regionsector" FromRole="sector" ToRole="region" />
+    <Property Name="regionId" Type="Int32" Nullable="false" />
+  </EntityType>
+  <Association Name="regionsector">
+    <End Type="tempdbModel.region" Role="region" Multiplicity="1" />
+    <End Type="tempdbModel.sector" Role="sector" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="region">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="sector">
+        <PropertyRef Name="regionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="partido">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="login">
+    <Key>
+      <PropertyRef Name="loginAdmin" />
+    </Key>
+    <Property Name="loginAdmin" Type="String" Nullable="false" MaxLength="250" FixedLength="true" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Vote">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="idPartido" />
+      <PropertyRef Name="idSector" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="idSector" Type="Int32" Nullable="false" />
+    <Property Name="idPartido" Type="Int32" Nullable="false" />
+  </EntityType>
+</Schema>

@@ -1,0 +1,7 @@
+﻿
+- [x] Design main
+- [] add license support
+- [] view / print stats
+- [] store sensitive content using hash/crypt
+- [] test on a remote server
+- [] use timer to keep refreshing app from db (multi-user accesing db)?!

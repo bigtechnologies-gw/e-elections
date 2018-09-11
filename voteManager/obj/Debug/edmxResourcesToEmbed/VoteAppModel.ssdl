@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="tempdbModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="tempdbModelStoreContainer">
+    <EntitySet Name="regions" EntityType="tempdbModel.Store.regions" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="sectors" EntityType="tempdbModel.Store.sectors" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="partidos" EntityType="tempdbModel.Store.partidos" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="logins" EntityType="tempdbModel.Store.logins" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Votes" EntityType="tempdbModel.Store.Votes" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="regionsector" Association="tempdbModel.Store.regionsector">
+      <End Role="region" EntitySet="regions" />
+      <End Role="sector" EntitySet="sectors" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="regions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sectors">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="regionId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="partidos">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="logins">
+    <Key>
+      <PropertyRef Name="loginAdmin" />
+    </Key>
+    <Property Name="loginAdmin" Type="nchar" Nullable="false" MaxLength="250" />
+  </EntityType>
+  <EntityType Name="Votes">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="idPartido" />
+      <PropertyRef Name="idSector" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="idSector" Type="int" Nullable="false" />
+    <Property Name="idPartido" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="regionsector">
+    <End Role="region" Type="tempdbModel.Store.regions" Multiplicity="1" />
+    <End Role="sector" Type="tempdbModel.Store.sectors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="region">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="sector">
+        <PropertyRef Name="regionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

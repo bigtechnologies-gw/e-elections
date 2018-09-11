@@ -1,0 +1,16 @@
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\bin\Debug\voteManager.exe.config
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\bin\Debug\voteManager.exe
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\bin\Debug\voteManager.pdb
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\bin\Debug\EntityFramework.dll
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\bin\Debug\EntityFramework.xml
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\obj\Debug\voteManager.csprojAssemblyReference.cache
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\obj\Debug\voteManager.LoginForm.resources
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\obj\Debug\voteManager.Main.resources
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\obj\Debug\voteManager.csproj.GenerateResource.cache
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\obj\Debug\voteManager.csproj.CoreCompileInputs.cache
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\obj\Debug\voteManager.csproj.CopyComplete
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\obj\Debug\voteManager.exe
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\obj\Debug\voteManager.pdb
+C:\Users\bigtech-dev\source\repos\voteManager\voteManager\obj\Debug\voteManager.EditVote.resources
