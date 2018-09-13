@@ -12,20 +12,20 @@ namespace voteManager
     using System;
     using System.Collections.Generic;
     
-    public partial class sector
+    public partial class Sector
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public sector()
+        public Sector()
         {
             this.CEs = new HashSet<CE>();
         }
     
         public int Id { get; set; }
         public string name { get; set; }
-        public int regionId { get; set; }
+        public int RegionId { get; set; }
     
-        public virtual Region region { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CE> CEs { get; set; }
+        public virtual Region Region { get; set; }
     }
 }

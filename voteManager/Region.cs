@@ -17,14 +17,14 @@ namespace voteManager
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Region()
         {
-            this.sectors = new HashSet<sector>();
+            this.sectors = new HashSet<Sector>();
         }
     
         public int Id { get; set; }
-        public string name { get; set; }
+        public string Name { get; set; }
+        public int idProvince { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<sector> sectors { get; set; }
-        public virtual Province Province { get; set; }
+        public virtual ICollection<Sector> sectors { get; set; }
     }
 }

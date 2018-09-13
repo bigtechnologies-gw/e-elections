@@ -12,7 +12,7 @@ namespace voteManager
     using System;
     using System.Collections.Generic;
     
-    public partial class partido
+    public partial class Partido
     {
         public int Id { get; set; }
         public string name { get; set; }

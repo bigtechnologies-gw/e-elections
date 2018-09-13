@@ -22,5 +22,7 @@ namespace voteManager
         public System.DateTime DateCreation { get; set; }
         public int OwnerId { get; set; }
         public TypeUser Type { get; set; }
+        public int ProvinceId { get; set; }
+        public string Salt { get; set; }
     }
 }

@@ -4,16 +4,38 @@
     {
         public static bool IsValidPassword(string password)
         {
-            if (string.IsNullOrWhiteSpace(password))
+            password = password.Trim();
+            if (string.IsNullOrEmpty(password))
             {
                 return false;
             }
             return true;
         }
 
+        public static bool IsValidPassword(string password, string passwordConfirm)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(passwordConfirm))
+            {
+                return false;
+            }
+
+            if (!password.Equals(passwordConfirm, System.StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public static bool IsValidUserName(string userName)
         {
-            if (string.IsNullOrWhiteSpace(userName))
+            userName = userName.Trim();
+            if (string.IsNullOrEmpty(userName))
             {
                 return false;
             }
@@ -22,7 +44,8 @@
 
         public static bool IsValidName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            name = name.Trim();
+            if (string.IsNullOrEmpty(name))
             {
                 return false;
             }

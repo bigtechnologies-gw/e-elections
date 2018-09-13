@@ -17,7 +17,5 @@ namespace voteManager
         public int Id { get; set; }
         public string Name { get; set; }
         public int Admin { get; set; }
-    
-        public virtual Region region { get; set; }
     }
 }

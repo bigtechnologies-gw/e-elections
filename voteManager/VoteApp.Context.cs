@@ -25,13 +25,13 @@ namespace voteManager
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Region> Regions1 { get; set; }
-        public virtual DbSet<sector> sectors { get; set; }
-        public virtual DbSet<partido> partidos { get; set; }
+        public virtual DbSet<Sector> Sectors { get; set; }
+        public virtual DbSet<Partido> Partidos { get; set; }
         public virtual DbSet<CE> CEs { get; set; }
-        public virtual DbSet<voteTable> voteTables { get; set; }
-        public virtual DbSet<vote> votes { get; set; }
+        public virtual DbSet<VoteTable> VoteTables { get; set; }
+        public virtual DbSet<Vote> Votes { get; set; }
         public virtual DbSet<Province> Provinces { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Region> Regions { get; set; }
     }
 }

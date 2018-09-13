@@ -12,10 +12,11 @@ namespace voteManager
     using System;
     using System.Collections.Generic;
     
-    public partial class voteTable
+    public partial class VoteTable
     {
         public int Id { get; set; }
         public int CEId { get; set; }
+        public int registedPerson { get; set; }
     
         public virtual CE CE { get; set; }
     }

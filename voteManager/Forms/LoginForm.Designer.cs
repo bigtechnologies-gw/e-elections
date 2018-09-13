@@ -35,7 +35,7 @@
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.checkBoxHideShowLogin = new System.Windows.Forms.CheckBox();
             this.labelLogin = new System.Windows.Forms.Label();
-            this.linkLabelContactAdmin = new System.Windows.Forms.LinkLabel();
+            this.linkLabelCreateUser = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,7 +45,7 @@
             this.textBoxLogin.Name = "textBoxLogin";
             this.textBoxLogin.Size = new System.Drawing.Size(326, 20);
             this.textBoxLogin.TabIndex = 2;
-            this.textBoxLogin.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxLogin_KeyDown);
+            this.textBoxLogin.Text = "a";
             // 
             // buttonLogin
             // 
@@ -87,7 +87,9 @@
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.Size = new System.Drawing.Size(326, 20);
             this.textBoxPassword.TabIndex = 4;
+            this.textBoxPassword.Text = "a";
             this.textBoxPassword.UseSystemPasswordChar = true;
+            this.textBoxPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxPassword_KeyDown);
             // 
             // checkBoxHideShowLogin
             // 
@@ -111,22 +113,23 @@
             this.labelLogin.TabIndex = 0;
             this.labelLogin.Text = "Login:";
             // 
-            // linkLabelContactAdmin
+            // linkLabelCreateUser
             // 
-            this.linkLabelContactAdmin.AutoSize = true;
-            this.linkLabelContactAdmin.Location = new System.Drawing.Point(12, 231);
-            this.linkLabelContactAdmin.Name = "linkLabelContactAdmin";
-            this.linkLabelContactAdmin.Size = new System.Drawing.Size(228, 13);
-            this.linkLabelContactAdmin.TabIndex = 1;
-            this.linkLabelContactAdmin.TabStop = true;
-            this.linkLabelContactAdmin.Text = "To create new account, please contact admin!";
+            this.linkLabelCreateUser.AutoSize = true;
+            this.linkLabelCreateUser.Location = new System.Drawing.Point(12, 231);
+            this.linkLabelCreateUser.Name = "linkLabelCreateUser";
+            this.linkLabelCreateUser.Size = new System.Drawing.Size(84, 13);
+            this.linkLabelCreateUser.TabIndex = 1;
+            this.linkLabelCreateUser.TabStop = true;
+            this.linkLabelCreateUser.Text = "Create new user";
+            this.linkLabelCreateUser.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCreateUser_LinkClicked);
             // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(449, 250);
-            this.Controls.Add(this.linkLabelContactAdmin);
+            this.Controls.Add(this.linkLabelCreateUser);
             this.Controls.Add(this.groupBox1);
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -147,6 +150,6 @@
         private System.Windows.Forms.CheckBox checkBoxHideShowLogin;
         private System.Windows.Forms.TextBox textBoxPassword;
         private System.Windows.Forms.Label labelPassword;
-        private System.Windows.Forms.LinkLabel linkLabelContactAdmin;
+        private System.Windows.Forms.LinkLabel linkLabelCreateUser;
     }
 }

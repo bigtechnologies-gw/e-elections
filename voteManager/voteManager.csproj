@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -62,6 +63,12 @@
     <Compile Include="CE.cs">
       <DependentUpon>VoteApp.tt</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CreateUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CreateUser.Designer.cs">
+      <DependentUpon>CreateUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\Controller.cs" />
     <Compile Include="Helpers\DataValidator.cs" />
     <Compile Include="Forms\EditVote.cs">
@@ -86,7 +93,8 @@
     </Compile>
     <Compile Include="Helpers\DbUtils.cs" />
     <Compile Include="Helpers\ExtentionMethods.cs" />
-    <Compile Include="partido.cs">
+    <Compile Include="Helpers\LoginUserContext.cs" />
+    <Compile Include="Partido.cs">
       <DependentUpon>VoteApp.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -97,14 +105,14 @@
     <Compile Include="Forms\Statistics.Designer.cs">
       <DependentUpon>Statistics.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Utilities.cs" />
+    <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Province.cs">
       <DependentUpon>VoteApp.tt</DependentUpon>
     </Compile>
     <Compile Include="Region.cs">
       <DependentUpon>VoteApp.tt</DependentUpon>
     </Compile>
-    <Compile Include="sector.cs">
+    <Compile Include="Sector.cs">
       <DependentUpon>VoteApp.tt</DependentUpon>
     </Compile>
     <Compile Include="TypeUser.cs">
@@ -113,7 +121,7 @@
     <Compile Include="User.cs">
       <DependentUpon>VoteApp.tt</DependentUpon>
     </Compile>
-    <Compile Include="vote.cs">
+    <Compile Include="Vote.cs">
       <DependentUpon>VoteApp.tt</DependentUpon>
     </Compile>
     <Compile Include="VoteApp.Context.cs">
@@ -131,9 +139,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VoteApp.edmx</DependentUpon>
     </Compile>
-    <Compile Include="voteTable.cs">
+    <Compile Include="VoteTable.cs">
       <DependentUpon>VoteApp.tt</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\CreateUser.resx">
+      <DependentUpon>CreateUser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\EditVote.resx">
       <DependentUpon>EditVote.cs</DependentUpon>
     </EmbeddedResource>
@@ -142,6 +153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Statistics.resx">
+      <DependentUpon>Statistics.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

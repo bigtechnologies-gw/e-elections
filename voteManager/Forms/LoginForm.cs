@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using voteManager.Forms;
+using voteManager.Helpers;
 
 namespace voteManager
 {
     public partial class LoginForm : Form
     {
         private Main _main;
-        private voteAppEntities _voteModel;
+        private voteAppEntities _appEntities;
         private User _loginUser;
 
         public LoginForm()
         {
             InitializeComponent();
-
-            //textBoxLogin.UseSystemPasswordChar = true;
+            _appEntities = DbUtils.AppEntities;
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
@@ -26,11 +27,11 @@ namespace voteManager
         {
             string userName = textBoxLogin.Text;
             string password = textBoxPassword.Text;
-            // validation
+            textBoxPassword.Text = string.Empty;
 
             if (CheckLogin(userName, password))
             {
-                _main = new Main(_voteModel, _loginUser);
+                _main = new Main(_appEntities, _loginUser);
                 _loginUser = null;
                 Hide();
                 _main.Show(this);
@@ -48,32 +49,52 @@ namespace voteManager
 #else
             // todo: hash passsword
             string hashedPassword = password;
-            _voteModel = new voteAppEntities();
-            _loginUser = _voteModel.Users.FirstOrDefault(login => login.Name.Equals(userName, StringComparison.Ordinal) && login.Password.Equals(hashedPassword));
+            _appEntities = new voteAppEntities();
 
-            if (_loginUser == null)
+            if (!_appEntities.Users.Any())
             {
-                MessageBox.Show("Username or password doesn't exists", "User not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
+            _loginUser = _appEntities.Users.FirstOrDefault(login => login.Name.Equals(userName, StringComparison.Ordinal) && login.Password.Equals(hashedPassword));
+
+            if (_loginUser == null)
+            {
+                return false;
+            }
+
+            // only enabled user is allowed to login.
+            if (!_loginUser.Enabled)
+            {
+                MessageBox.Show($"User: {_loginUser.Name} disabled");
+                textBoxPassword.Text = string.Empty;
+                return false;
+            }
             return true;
 #endif
             //return _voteModel.logins.Any(rec => rec.loginAdmin.TrimEnd().Equals(login, StringComparison.Ordinal));
-        }
-
-        private void textBoxLogin_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                Login();
-            }
         }
 
         private void checkBoxHideShowLogin_CheckedChanged(object sender, EventArgs e)
         {
             //textBoxLogin.UseSystemPasswordChar = !textBoxLogin.UseSystemPasswordChar;
             //textBoxLogin.Text = 
+        }
+
+        private void linkLabelCreateUser_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            using (var createUser = new CreateUser(_appEntities))
+            {
+                createUser.ShowDialog(this);
+            }
+        }
+
+        private void textBoxPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Login();
+            }
         }
     }
 }

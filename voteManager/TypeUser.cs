@@ -15,6 +15,7 @@ namespace voteManager
     {
         Admin = 0,
         Standard = 1,
-        Sytem = 2
+        Sytem = 2,
+        Guest = 3
     }
 }

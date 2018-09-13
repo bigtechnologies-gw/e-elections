@@ -12,7 +12,7 @@ namespace voteManager
     using System;
     using System.Collections.Generic;
     
-    public partial class vote
+    public partial class Vote
     {
         public int Id { get; set; }
         public int idRegion { get; set; }
@@ -20,6 +20,7 @@ namespace voteManager
         public int idCE { get; set; }
         public int idVoteTable { get; set; }
         public int idPartido { get; set; }
+        public int provinceId { get; set; }
         public int voteData { get; set; }
     }
 }

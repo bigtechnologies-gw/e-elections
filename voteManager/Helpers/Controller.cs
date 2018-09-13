@@ -7,7 +7,7 @@ using voteManager.Entity;
 
 namespace voteManager
 {
-    // note: this is the base class for all "partidos"
+    // note: this is the base class for all "Partidos"
     public abstract class Controller // TODO: Rename to match the context of  super/base class
     {
         public string Name { get; set; }
@@ -36,10 +36,11 @@ namespace voteManager
 
         private static IList<Region> BuildRegions()
         {
-            var listRegions = new List<Region>(9);
+            throw new NotFiniteNumberException();
+            //var listRegions = new List<Region>(9);
 
-            listRegions.Add(new Region("Tombali", new List<Sector>() { new Sector(1, "Catio"),
-                new Sector(1, "Komo") , new Sector(2, "Bedanda"), new Sector(2, "Cacine"), new Sector(2, "Quebo")}));
+            //listRegions.Add(new Region("Tombali", new List<Sector>() { new Sector(1, "Catio"),
+            //    new Sector(1, "Komo") , new Sector(2, "Bedanda"), new Sector(2, "Cacine"), new Sector(2, "Quebo")}));
 
             //listRegions.Add(new Region("Quinara", new List<Sector>() { new Sector("Catio"), new Sector("Komo") }));
             //listRegions.Add(new Region("Oio", new List<Sector>() { new Sector("Catio"), new Sector("Komo") }));
@@ -50,7 +51,7 @@ namespace voteManager
 
             // todo: use inheritance since bissau isn't a *region?
             //listRegions.Add(new Region("SA", new List<Sector>() { new Sector("Catio"), new Sector("Komo") }));
-            return listRegions;
+            //return listRegions;
         }
     }
 }

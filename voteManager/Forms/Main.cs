@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -7,22 +6,30 @@ namespace voteManager
 {
     public partial class Main : Form
     {
-        private readonly voteAppEntities _voteModel;
-        private readonly User loginUser;
+        private readonly voteAppEntities _voteEntities;
+        private readonly User _loginUser;
 
-        public Main(voteAppEntities voteModel, User loginUser)
+        public Main(voteAppEntities voteEntities, User loginUser)
         {
             InitializeComponent();
 
             FormClosed += Main_FormClosed;
-            _voteModel = voteModel;
-            this.loginUser = loginUser;
+            _voteEntities = voteEntities;
+            _loginUser = loginUser;
 
+            if (!(loginUser.Type == TypeUser.Admin || loginUser.Type == TypeUser.Sytem))
+            {
+                groupBox6.Enabled = false;
+            }
+            else
+            {
+                groupBox6.Enabled = true;
+            }
 
             // load async
             UpdateListPartidos();
 
-            BuildPreDefinedDataBase();
+            UpdateUI();
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
@@ -37,7 +44,7 @@ namespace voteManager
 
             // check if partido with that name doesn't already exit
 
-            if (_voteModel.partidos.Any(p => p.name.Equals(partido, StringComparison.OrdinalIgnoreCase)))
+            if (_voteEntities.partidos.Any(p => p.name.Equals(partido, StringComparison.OrdinalIgnoreCase)))
             {
                 // partido already exists
                 MessageBox.Show("partido* already exists", "Duplicated partido*", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -45,10 +52,10 @@ namespace voteManager
             }
 
             // send to db
-            _voteModel.partidos.Add(new partido() { name = partido });
+            _voteEntities.partidos.Add(new partido() { name = partido });
 
             // todo: save changes async
-            _voteModel.SaveChanges();
+            _voteEntities.SaveChanges();
 
             // update listview
             UpdateListPartidos();
@@ -63,7 +70,7 @@ namespace voteManager
             listBoxPartidos.Items.Clear();
             comboBoxPeritidos.Items.Clear();
 
-            foreach (var part in _voteModel.partidos.OrderBy(p => p.name))
+            foreach (var part in _voteEntities.partidos.OrderBy(p => p.name))
             {
                 listBoxPartidos.Items.Add(part);
                 comboBoxPeritidos.Items.Add(part);
@@ -83,13 +90,12 @@ namespace voteManager
                 return;
             }
 
-
             if (partido != null)
             {
                 // remove from listview
                 listBoxPartidos.Items.RemoveAt(listBoxPartidos.SelectedIndex);
                 // remove from database (warm user that all the data linked with the *partido will be delete aswell.
-                _voteModel.partidos.Remove(partido);
+                _voteEntities.partidos.Remove(partido);
                 //_voteModel.SaveChanges();
             }
 
@@ -103,292 +109,60 @@ namespace voteManager
                     break;
                 }
             }
-            _voteModel.SaveChanges();
+            _voteEntities.SaveChanges();
 
             // TODO: Make sure all the date from the partido is also removed from the database?
             // NOTE: vote-table doesn't have any relatioship with other table with means the data
             // would still be stored even after the we remove *partido.
         }
 
-        private void BuildPreDefinedDataBase()
+        public void UpdateUI()
         {
-            // only an admin or a system has right to creaet/delete/modify db directly
-            if (!(loginUser.Type == TypeUser.Admin || loginUser.Type == TypeUser.Sytem))
-            {
-                MessageBox.Show("No access right!", "No access", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-
-
-            var listCardinalDirections = new List<string>
-            {
-                "North", "East", "South", "West", "N/A"
-            };
-
-            // geo data
-            var datas = new Dictionary<string, List<string>>
-            {
-                // source: https://en.wikipedia.org/wiki/Sectors_of_Guinea-Bissau
-                ["Quinara:S"] = new List<string> { "Tite", "Buba", "Empada", "Fulacunda" }, // south
-                ["Oio:N"] = new List<string> { "Bissora", "Farim", "Mansaba", "Mansoa", "Nhacra" }, // north
-                ["Biombo:N"] = new List<string> { "Prabis", "Quinhamel", "Safim" }, // North
-                ["Bolama/Bijagos:S"] = new List<string> { "Bolama", "Bubaque", "Caravela", "Uno" }, // South
-                ["Bafata:E"] = new List<string> { "Bafata", "Bambadinca", "Contuboel", "Galomaro", "Gamamundo", "Xitole" }, // Est (lest)
-                ["Tombali:S"] = new List<string> { "Bedanda", "Cacine", "Catio", "Quebo", "Komo" }, // south
-                ["SA/Bissau:N/A"] = new List<string> { "Bissau" }, // -
-                ["Gabu:E"] = new List<string> { "Boe", "Gabu", "Piche", "Pirada", "Sonaco" }, // Est
-                ["Cacheu:N"] = new List<string> { "Bigene", "Bula", "Caio", "Canchungo", "Sao Domingos" } //North
-            };
-
-            // no cardinal direction in db yet!
-            if (_voteModel.Provinces.Any() == false)
-            {
-                _voteModel.Provinces.AddRange(listCardinalDirections.Select(cd => new Province { Name = cd }).ToList());
-                _voteModel.SaveChanges();
-            }
-            //_voteModel.SaveChanges();
-
-            // insert all regions if not already in db
-
-            var listCe = new List<string>
-            {
-                "CE-01", "CE-02", "CE-03", "CE-04"
-            };
-
-            var voteTableTemp = new List<string>
-            {
-                "VT-01","VT-02","VT-03","VT-04","VT-05",
-            };
-
-            if (!_voteModel.regions.Any())
-            {
-                // regions -> sectors -> ce -> table
-                foreach (var data in datas)
-                {
-                    string[] regionProvince = data.Key.Split(':');
-                    string regionName = regionProvince[0];
-                    string province = regionProvince.Length > 1 ? regionProvince[1] : string.Empty;
-
-                    var region = new region()
-                    {
-                        name = regionName
-                    };
-
-                    //System.Diagnostics.Debugger.Break();
-
-                    switch (province)
-                    {
-                        // TODO: optimze
-                        case "N":
-                            foreach (Province prov in _voteModel.Provinces)
-                            {
-                                if (prov.Name.StartsWith("N", StringComparison.Ordinal))
-                                {
-                                    prov.region = region;
-                                    break;
-                                }
-                            }
-                            break;
-                        case "S":
-                            //_voteModel.Provinces.First(p => p.Name.StartsWith("S", StringComparison.Ordinal));
-                            foreach (Province prov in _voteModel.Provinces)
-                            {
-                                if (prov.Name.StartsWith("S", StringComparison.Ordinal))
-                                {
-                                    prov.region = region;
-                                    break;
-                                }
-                            }
-                            break;
-                        case "W":
-                            foreach (Province prov in _voteModel.Provinces)
-                            {
-                                if (prov.Name.StartsWith("W", StringComparison.Ordinal))
-                                {
-                                    prov.region = region;
-                                    break;
-                                }
-                            }
-                            break;
-                        case "E":
-                            foreach (Province prov in _voteModel.Provinces)
-                            {
-                                if (prov.Name.StartsWith("E", StringComparison.Ordinal))
-                                {
-                                    prov.region = region;
-                                    break;
-                                }
-                            }
-                            break;
-                        case "N/A":
-                            //var regionBissau = _voteModel.regions.Where(reg => reg.name.Equals("SA/Bissau", StringComparison.OrdinalIgnoreCase)).First();
-                            foreach (var prov in _voteModel.Provinces)
-                            {
-                                if (prov.Name.Equals("n/a", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    prov.region = region;
-                                    break;
-                                }
-                            }
-                            break;
-                            //_voteModel.Provinces.First(p => p.Name.StartsWith("B", StringComparison.Ordinal) || p.Name.StartsWith("S", StringComparison.Ordinal)); //.region = region;
-                    }
-
-                    //foreach (var item in _voteModel.Provinces)
-                    //{
-                    //    if(item.region == null)
-                    //    {
-                    //        System.Diagnostics.Debugger.Break();
-                    //    }
-                    //}
-
-                    foreach (var sector in data.Value)
-                    {
-                        var sec = new sector
-                        {
-                            name = sector,
-                        };
-
-                        //_voteMode.
-                        sec.CEs.Add(new CE
-                        {
-                            voteTables = { new voteTable() }
-                        });
-                        region.sectors.Add(sec);
-                    }
-
-                    _voteModel.regions.Add(region);
-                }
-            }
-
-            // push changed to db
-            //_voteModel.SaveChanges();
-
-            var listPartidos = new List<string>
-            {
-                "PRS", "PAIGC", "PSP", "PPP", "PPA"
-            };
-
-            if (!_voteModel.partidos.Any())
-            {
-                foreach (var partido in listPartidos)
-                {
-                    var partidoModel = new partido()
-                    {
-                        name = partido,
-                    };
-                    _voteModel.partidos.Add(partidoModel);
-                }
-            }
-
-            _voteModel.SaveChanges();
-            // System.ComponentModel.
-            // _voteModel.votes.ThenBy()
-            // _voteModel.regions.Aggregate()
-            // _voteModel.regions
-            //var result = _voteModel.votes.Join(_voteModel.regions, v => v.Id, m => m.Id, (v, r) => new { voteData = v, regionData = r });
-            //var result2 = from v in _voteModel.votes
-            //              join r in _voteModel.regions
-            //              on v.Id equals r.Id
-            //              select new { voteD = v, regionD = r };
-            //foreach (var item in result)
-            //{
-            //    item.regionData.
-            //}
-            //var cresult = _voteModel.regions.OrderBy(r => r.name).ToList();
-            UpdateGui();
-            //bool changes = false;
-            //if (changes)
-            //{
-            //    _voteModel.SaveChanges();
-            //}
-        }
-
-        public void UpdateGui()
-        {
-            listView1.BeginUpdate();
-            listView1.Groups.Clear();
-
             comboBoxRegions.BeginUpdate();
-            //comboBoxSectors.BeginUpdate();
-            //comboBoxCE.BeginUpdate();
-            //comboBoxTable.BeginUpdate();
-
-            foreach (var region in _voteModel.regions.OrderBy(r => r.name))
+            comboBoxRegions.Items.Clear();
+            IOrderedQueryable<Region> userRegions = null;
+            switch (_loginUser.Type)
             {
-                comboBoxRegions.Items.Add(region);
+                case TypeUser.Admin:
+                case TypeUser.Standard:
+                    userRegions = _voteEntities.Regions.Where(region => region.idProvince == _loginUser.ProvinceId).OrderBy(region => region.Name);
+                    break;
+                case TypeUser.Sytem:
+                    userRegions = _voteEntities.Regions;
+                    break;
             }
+            if (_loginUser.Type == TypeUser.Admin || _loginUser.Type == TypeUser.Standard || _loginUser.Type == TypeUser.Sytem)
+            {
+                foreach (Region Region in userRegions)
+                {
+                    comboBoxRegions.Items.Add(Region);
+                }
+            }
+            else
+            {
+                groupBoxAddUser.Enabled = false;
+            }
+
+            if (comboBoxRegions.Items.Count > 0)
+            {
+                comboBoxRegions.SelectedIndex = 0;
+            }
+
+            // if there is only one region, select it and display radion-button region
             comboBoxRegions.EndUpdate();
 
-            foreach (var region in _voteModel.regions.OrderBy(r => r.name))
+            if (comboBoxPeritidos.Items.Count > 0)
             {
-                var lvg = new ListViewGroup($"group{region.name}", region.name);
-                lvg.Tag = region;
-                listView1.Groups.Add(lvg);
-            }
-            listView1.EndUpdate();
-
-            //var jResult = _voteModel.votes.Join(_voteModel.regions, _vote => _vote.Id, _region => _region.Id,
-            //     (cVote, cRegion) => new { Vote = cVote, Region = cRegion });
-
-
-            foreach (vote vote in _voteModel.votes)
-            {
-                var partido = _voteModel.partidos.First(p => p.Id == vote.idPartido);
-                var sector = _voteModel.sectors.First(p => p.Id == vote.idSector);
-                var ce = _voteModel.CEs.First(p => p.Id == vote.idCE);
-                var voteTable = _voteModel.voteTables.First(p => p.Id == vote.idVoteTable);
-
-                var lvi = new ListViewItem(partido.name)
-                {
-                    SubItems = { sector.name, ce.Id.ToString(), voteTable.ToString(), vote.voteData.ToString() }
-                };
-
-                foreach (ListViewGroup lvg in listView1.Groups)
-                {
-                    if (((region)lvg.Tag).Id == sector.regionId)
-                    {
-                        lvi.Group = lvg;
-                        break;
-                    }
-                }
-
-                listView1.Items.Add(lvi);
+                comboBoxPeritidos.SelectedIndex = 0;
             }
 
-            //foreach (var item in jResult)
-            //{
-            //    //item.v
-            //    foreach (ListViewGroup lvg in listView1.Groups)
-            //    {
-            //        if (((region)lvg.Tag).Id == item.Region.Id)
-            //        {
-            //            // todo: map partido to avoid 
-            //            // partido -> sector -> ce -> table -> vote
-            //            var p = _voteModel.partidos.First(part => part.Id == item.Vote.idPartido);
-            //            var sector = _voteModel.sectors.First(s => s.Id == item.Vote.idSector);
-            //            //var ce = _voteModel.CEs.First(s => s.Id == item.Vote.idCE);
-            //            //var vt = _voteModel.voteTables.First(s => s.Id == item.Vote.idVoteTable);
-            //            var lvi = new ListViewItem(p.name)
-            //            {
-            //                SubItems = { sector.name, "" /*ce.ToString()*/, "", 232.ToString()/*vt.ToString() */}
-            //            };
-            //            lvi.Group = lvg;
-            //            listView1.Items.Add(lvi);
-            //            break;
-            //        }
-            //    }
-            //}
+            UpdateListViewVotes(userRegions);
         }
 
         private void buttonAddVote_Click(object sender, EventArgs e)
         {
-            // TODO: Only allow number input in textbox vote
-
             int votes;
-
             string voteData = textBoxVote.Text; // .TrimStart('0'); // TODO: Uncomment
-
             if (!int.TryParse(voteData, out votes))
             {
                 // invalid data entered
@@ -396,19 +170,15 @@ namespace voteManager
                 return;
             }
 
-            // validate vote
-
-            // send data to db
-
             int idPartido = ((partido)comboBoxPeritidos.SelectedItem).Id;
-            int idRegion = ((region)comboBoxRegions.SelectedItem).Id;
+            int idRegion = ((Region)comboBoxRegions.SelectedItem).Id;
             int idSector = ((sector)comboBoxSectors.SelectedItem).Id;
             int idCE = ((CE)comboBoxCE.SelectedItem).Id;
             int idTable = ((voteTable)comboBoxTable.SelectedItem).Id;
+            int provinceId = _loginUser.ProvinceId;
 
             // check if vote isn't already inserted
-
-            bool isInDatabase = _voteModel.votes.Any(v => v.idPartido == idPartido
+            bool isInDatabase = _voteEntities.votes.Any(v => v.idPartido == idPartido
             && v.idRegion == idRegion && v.idSector == idSector
             && v.idCE == idCE && v.idVoteTable == idTable);
 
@@ -426,12 +196,13 @@ namespace voteManager
                 idSector = idSector,
                 idCE = idCE,
                 idVoteTable = idTable,
-                voteData = votes
+                voteData = votes,
+                provinceId = _loginUser.ProvinceId
             };
 
-            _voteModel.votes.Add(vote);
-            _voteModel.SaveChanges();
-
+            _voteEntities.votes.Add(vote);
+            _voteEntities.SaveChanges();
+            UpdateListViewVotes();
             MessageBox.Show("Vote added!", "Vote added", MessageBoxButtons.OK, MessageBoxIcon.Information);
             textBoxVote.Text = string.Empty;
         }
@@ -444,9 +215,9 @@ namespace voteManager
             comboBoxSectors.Items.Clear();
             comboBoxCE.Items.Clear();
 
-            var region = comboBoxRegions.SelectedItem as region;
+            var Region = comboBoxRegions.SelectedItem as Region;
 
-            foreach (var sector in region.sectors)
+            foreach (var sector in Region.sectors)
             {
                 comboBoxSectors.Items.Add(sector);
             }
@@ -473,14 +244,11 @@ namespace voteManager
             {
                 comboBoxCE.Items.Add(ce);
             }
-
             if (comboBoxCE.Items.Count > 0)
             {
                 comboBoxCE.SelectedIndex = 0;
             }
-
             comboBoxCE.EndUpdate();
-            // add data to ce
         }
 
         private void comboBoxCE_SelectedIndexChanged(object sender, EventArgs e)
@@ -519,21 +287,19 @@ namespace voteManager
             {
                 e.SuppressKeyPress = true;
             }
+            // note: could be achived with marsked-textbox-control
         }
 
         private void tabControlMenu_Selected(object sender, TabControlEventArgs e)
         {
-            if (listBoxUsers.Items.Count == 0)
+            listBoxUsers.BeginUpdate();
+            listBoxUsers.Items.Clear();
+            foreach (var login in _voteEntities.Users.Where(user => user.OwnerId == _loginUser.Id || user.Id == _loginUser.Id).OrderBy(user => user.Name))
             {
-                listBoxUsers.BeginUpdate();
-                foreach (var login in _voteModel.Users.OrderBy(user => user.Name))
-                {
-                    listBoxUsers.Items.Add(login);
-                }
-                listBoxUsers.EndUpdate();
+                listBoxUsers.Items.Add(login);
             }
+            listBoxUsers.EndUpdate();
         }
-
 
         private void buttonRemoveUser_Click(object sender, EventArgs e)
         {
@@ -541,42 +307,82 @@ namespace voteManager
             {
                 return;
             }
+            if (listBoxUsers.SelectedItem == null)
+            {
+                return;
+            }
+            User user = listBoxUsers.SelectedItem as User;
+            if (user == null)
+            {
+                return;
+            }
+            _voteEntities.Users.Remove(user);
+            listBoxUsers.Items.RemoveAt(listBoxUsers.SelectedIndex);
+            _voteEntities.SaveChanges();
+        }
 
+        private void buttonUpdateUser_Click(object sender, EventArgs e)
+        {
             if (listBoxUsers.SelectedItem == null)
             {
                 return;
             }
 
-            User user = listBoxUsers.SelectedItem as User;
+            string fullName = textBoxEditFullName.Text.Trim();
+            string password = textBoxEditPasswowrd.Text.Trim();
+            string userName = textBoxEditLogin.Text.Trim();
 
-            if (user == null)
+            var selUser = listBoxUsers.SelectedItem as User;
+
+            if (!DataValidator.IsValidName(fullName))
             {
-                // notify
-                return;
+                Name = null;
+            }
+            if (!DataValidator.IsValidUserName(userName))
+            {
+                userName = null;
+            }
+            if (!DataValidator.IsValidPassword(password))
+            {
+                password = null;
             }
 
-            _voteModel.Users.Remove(user);
-            listBoxUsers.Items.RemoveAt(listBoxUsers.SelectedIndex);
-            _voteModel.SaveChanges();
+            // username 
+            _loginUser.Name = userName ?? _loginUser.Name;
+            _loginUser.FullName = fullName ?? _loginUser.FullName;
+            _loginUser.Password = password ?? _loginUser.Password;
+
+            _voteEntities.SaveChanges();
+
+            //_voteEntities.Entry(null).
+
+            // TODO:
+            // - any use an updates it's info 
+            // - admin can disable any-use he/she created
+            // - admin can enable/disble any-user he/she created
+            // - login-user cannot enable/disable itself
+
+            // update UI
         }
 
         private void buttonAddUser_Click(object sender, EventArgs e)
         {
-            // check if user with same user-name doesn's already exits in db
-
-            // validate/confirm password
-
-            // TODO: Handle admin
-
-            // push to loginTable in db
-
+            // Add standard user to same province as logged in user.
             string userName = textBoxUserName.Text.Trim();
-            string name = textBoxName.Text.Trim();
+            string fullName = textBoxFullName.Text.Trim();
             string password = textBoxPassword.Text.Trim();
-            string confirmPassword = textBoxConfirmPassword.Text.Trim();
+            string passwordConfirm = textBoxConfirmPassword.Text.Trim();
 
+            if (_voteEntities.Users.Any(u => u.Name.Equals(userName, StringComparison.Ordinal)))
+            {
+                // user exits
+                MessageBox.Show("Users already exits!");
+                return;
+            }
 
-            if (!DataValidator.IsValidPassword(password))
+            // if system {admin=0, standard=1, system=2}
+            // if admin {standard = 0}
+            if (!DataValidator.IsValidPassword(password, passwordConfirm))
             {
                 // notify error
                 return;
@@ -588,32 +394,35 @@ namespace voteManager
                 return;
             }
 
-            if (!DataValidator.IsValidName(name))
+            if (!DataValidator.IsValidName(fullName))
             {
                 // notify error
                 return;
             }
 
-            if (!password.Equals(confirmPassword, StringComparison.Ordinal))
+            if (!password.Equals(passwordConfirm, StringComparison.Ordinal))
             {
                 // message user password doesn't match
                 return;
             }
 
+            // NOTE: by default use same province as admin
             var user = new User
             {
-                Name = name,
-                FullName = userName,
+                Enabled = true,
+                Name = userName,
+                FullName = fullName,
                 Password = password,
-                DateCreation = DateTime.Now
+                DateCreation = DateTime.Now,
+                Type = TypeUser.Standard,
+                ProvinceId = _loginUser.ProvinceId,
+                OwnerId = _loginUser.Id
             };
 
-            _voteModel.Users.Add(user);
-            _voteModel.SaveChanges();
+            _voteEntities.Users.Add(user);
+            _voteEntities.SaveChanges();
 
             MessageBox.Show("User added");
-
-            // update listbox users
         }
 
         public static bool IsValid(string input)
@@ -624,5 +433,87 @@ namespace voteManager
             }
             return true;
         }
+
+        public void UpdateListViewVotes(IQueryable<Region> userRegions = null)
+        {
+            // create groups
+            if (userRegions != null)
+            {
+                listViewVotes.BeginUpdate();
+                listViewVotes.Groups.Clear();
+                foreach (var Region in userRegions)
+                {
+                    var lvg = new ListViewGroup($"group{Region.Name}", Region.Name);
+                    lvg.Tag = Region;
+                    listViewVotes.Groups.Add(lvg);
+                }
+                listViewVotes.EndUpdate();
+            }
+
+            listViewVotes.BeginUpdate();
+            listViewVotes.Items.Clear();
+
+            // UNDONE: _voteEntities.votes.GroupBy(v => v.idPartido).OrderBy(v => v.Key);
+
+            foreach (vote vote in _voteEntities.votes.OrderBy(v => v.idSector))
+            {
+                var partido = _voteEntities.partidos.First(p => p.Id == vote.idPartido);
+                var sector = _voteEntities.sectors.First(p => p.Id == vote.idSector);
+                var ce = _voteEntities.CEs.First(p => p.Id == vote.idCE);
+                var voteTable = _voteEntities.voteTables.First(p => p.Id == vote.idVoteTable);
+
+                var lvi = new ListViewItem(partido.name)
+                {
+                    SubItems = { sector.name, ce.Id.ToString(), voteTable.ToString(), vote.voteData.ToString() }
+                };
+
+                foreach (ListViewGroup lvg in listViewVotes.Groups)
+                {
+                    if (((Region)lvg.Tag).Id == sector.RegionId)
+                    {
+                        lvi.Group = lvg;
+                        break;
+                    }
+                }
+
+                listViewVotes.Items.Add(lvi);
+            }
+
+            listViewVotes.EndUpdate();
+        }
+
+        private void listBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBoxUsers.SelectedItem == null)
+            {
+                return;
+            }
+
+            var selUser = listBoxUsers.SelectedItem as User;
+
+            if (selUser == null)
+            {
+                return;
+            }
+
+            textBoxEditLogin.Text = selUser.Name;
+            textBoxEditFullName.Text = selUser.FullName;
+            checkBoxEnableEditUser.Checked = selUser.Enabled;
+
+            bool isNotSel = _loginUser.Id != selUser.Id;
+            checkBoxEnableEditUser.Enabled = isNotSel;
+            buttonRemoveUser.Enabled = isNotSel;
+        }
+
+
+        #region Tab one
+
+        #endregion
+
+        #region Tab two
+
+        #endregion
     }
 }
+
+// if user is admin of region east he/she can only see sectros/ce/voting-table from east-region
