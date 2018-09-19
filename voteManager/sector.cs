@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace voteManager
+namespace VoteManager
 {
     using System;
     using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace voteManager
         }
     
         public int Id { get; set; }
-        public string name { get; set; }
+        public string Name { get; set; }
         public int RegionId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

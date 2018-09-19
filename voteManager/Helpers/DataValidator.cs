@@ -1,4 +1,4 @@
-﻿namespace voteManager
+﻿namespace VoteManager
 {
     public static class DataValidator
     {
@@ -18,17 +18,18 @@
             {
                 return false;
             }
-
             if (string.IsNullOrWhiteSpace(passwordConfirm))
             {
                 return false;
             }
-
+            if (password.Length > 25)
+            {
+                return false;
+            }
             if (!password.Equals(passwordConfirm, System.StringComparison.Ordinal))
             {
                 return false;
             }
-
             return true;
         }
 
@@ -36,6 +37,10 @@
         {
             userName = userName.Trim();
             if (string.IsNullOrEmpty(userName))
+            {
+                return false;
+            }
+            if (userName.Contains(" "))
             {
                 return false;
             }

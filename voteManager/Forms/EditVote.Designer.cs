@@ -1,4 +1,4 @@
-﻿namespace voteManager
+﻿namespace VoteManager
 {
     partial class EditVote
     {
@@ -34,7 +34,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(601, 337);
+            this.ClientSize = new System.Drawing.Size(493, 282);
             this.Name = "EditVote";
             this.Text = "EditVote";
             this.ResumeLayout(false);

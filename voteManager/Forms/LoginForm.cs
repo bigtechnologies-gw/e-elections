@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-using voteManager.Forms;
-using voteManager.Helpers;
+using VoteManager.Forms;
+using VoteManager.Helpers;
 
-namespace voteManager
+namespace VoteManager
 {
     public partial class LoginForm : Form
     {
@@ -18,7 +18,7 @@ namespace voteManager
             _appEntities = DbUtils.AppEntities;
         }
 
-        private void buttonLogin_Click(object sender, EventArgs e)
+        private void ButtonLogin_Click(object sender, EventArgs e)
         {
             Login();
         }
@@ -81,15 +81,7 @@ namespace voteManager
             //textBoxLogin.Text = 
         }
 
-        private void linkLabelCreateUser_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            using (var createUser = new CreateUser(_appEntities))
-            {
-                createUser.ShowDialog(this);
-            }
-        }
-
-        private void textBoxPassword_KeyDown(object sender, KeyEventArgs e)
+        private void TextBoxPassword_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {

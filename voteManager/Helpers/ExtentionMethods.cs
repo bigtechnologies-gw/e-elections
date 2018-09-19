@@ -1,4 +1,4 @@
-﻿namespace voteManager.Helpers
+﻿namespace VoteManager.Helpers
 {
     public static class ExtentionMethods
     {

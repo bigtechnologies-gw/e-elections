@@ -7,15 +7,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace voteManager
+namespace VoteManager
 {
     using System;
     
     public enum TypeUser : int
     {
-        Admin = 0,
-        Standard = 1,
-        Sytem = 2,
-        Guest = 3
+        Standard = 0,
+        Admin = 1,
+        SuperAdmin = 2
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace voteManager.Entity
+namespace VoteManager.Entity
 {
     class Region
     {

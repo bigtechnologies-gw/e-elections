@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 09/13/2018 11:04:17
+-- Date Created: 09/18/2018 10:39:14
 -- Generated from EDMX file: C:\Users\bigtech-dev\source\repos\voteManager\voteManager\VoteApp.edmx
 -- --------------------------------------------------
 
@@ -18,21 +18,21 @@ GO
 -- --------------------------------------------------
 
 IF OBJECT_ID(N'[dbo].[FK_CEvoteTable]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[voteTables] DROP CONSTRAINT [FK_CEvoteTable];
+    ALTER TABLE [dbo].[VoteTables] DROP CONSTRAINT [FK_CEvoteTable];
 GO
 IF OBJECT_ID(N'[dbo].[FK_sectorCE]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[CEs] DROP CONSTRAINT [FK_sectorCE];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Regionsector]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[sectors] DROP CONSTRAINT [FK_Regionsector];
+    ALTER TABLE [dbo].[Sectors] DROP CONSTRAINT [FK_Regionsector];
 GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[sectors]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[sectors];
+IF OBJECT_ID(N'[dbo].[Sectors]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Sectors];
 GO
 IF OBJECT_ID(N'[dbo].[Partidos]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Partidos];
@@ -40,11 +40,11 @@ GO
 IF OBJECT_ID(N'[dbo].[CEs]', 'U') IS NOT NULL
     DROP TABLE [dbo].[CEs];
 GO
-IF OBJECT_ID(N'[dbo].[voteTables]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[voteTables];
+IF OBJECT_ID(N'[dbo].[VoteTables]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[VoteTables];
 GO
-IF OBJECT_ID(N'[dbo].[votes]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[votes];
+IF OBJECT_ID(N'[dbo].[Votes]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Votes];
 GO
 IF OBJECT_ID(N'[dbo].[Provinces]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Provinces];
@@ -60,10 +60,10 @@ GO
 -- Creating all tables
 -- --------------------------------------------------
 
--- Creating table 'sectors'
-CREATE TABLE [dbo].[sectors] (
+-- Creating table 'Sectors'
+CREATE TABLE [dbo].[Sectors] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [name] nvarchar(max)  NOT NULL,
+    [Name] nvarchar(max)  NOT NULL,
     [RegionId] int  NOT NULL
 );
 GO
@@ -71,27 +71,31 @@ GO
 -- Creating table 'Partidos'
 CREATE TABLE [dbo].[Partidos] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [name] nvarchar(max)  NOT NULL
+    [Name] nvarchar(max)  NOT NULL,
+    [Enabled] bit  NOT NULL
 );
 GO
 
 -- Creating table 'CEs'
 CREATE TABLE [dbo].[CEs] (
     [Id] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(max)  NOT NULL,
     [sectorId] int  NOT NULL
 );
 GO
 
--- Creating table 'voteTables'
-CREATE TABLE [dbo].[voteTables] (
+-- Creating table 'VoteTables'
+CREATE TABLE [dbo].[VoteTables] (
     [Id] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(max)  NOT NULL,
     [CEId] int  NOT NULL,
-    [registedPerson] int  NOT NULL
+    [TotalRegisted] int  NOT NULL,
+    [InvalidVotes] int  NOT NULL
 );
 GO
 
--- Creating table 'votes'
-CREATE TABLE [dbo].[votes] (
+-- Creating table 'Votes'
+CREATE TABLE [dbo].[Votes] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [idRegion] int  NOT NULL,
     [idSector] int  NOT NULL,
@@ -138,9 +142,9 @@ GO
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
 
--- Creating primary key on [Id] in table 'sectors'
-ALTER TABLE [dbo].[sectors]
-ADD CONSTRAINT [PK_sectors]
+-- Creating primary key on [Id] in table 'Sectors'
+ALTER TABLE [dbo].[Sectors]
+ADD CONSTRAINT [PK_Sectors]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -156,15 +160,15 @@ ADD CONSTRAINT [PK_CEs]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'voteTables'
-ALTER TABLE [dbo].[voteTables]
-ADD CONSTRAINT [PK_voteTables]
+-- Creating primary key on [Id] in table 'VoteTables'
+ALTER TABLE [dbo].[VoteTables]
+ADD CONSTRAINT [PK_VoteTables]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id], [idSector], [idRegion], [idCE], [idVoteTable], [idPartido], [provinceId] in table 'votes'
-ALTER TABLE [dbo].[votes]
-ADD CONSTRAINT [PK_votes]
+-- Creating primary key on [Id], [idSector], [idRegion], [idCE], [idVoteTable], [idPartido], [provinceId] in table 'Votes'
+ALTER TABLE [dbo].[Votes]
+ADD CONSTRAINT [PK_Votes]
     PRIMARY KEY CLUSTERED ([Id], [idSector], [idRegion], [idCE], [idVoteTable], [idPartido], [provinceId] ASC);
 GO
 
@@ -190,8 +194,8 @@ GO
 -- Creating all FOREIGN KEY constraints
 -- --------------------------------------------------
 
--- Creating foreign key on [CEId] in table 'voteTables'
-ALTER TABLE [dbo].[voteTables]
+-- Creating foreign key on [CEId] in table 'VoteTables'
+ALTER TABLE [dbo].[VoteTables]
 ADD CONSTRAINT [FK_CEvoteTable]
     FOREIGN KEY ([CEId])
     REFERENCES [dbo].[CEs]
@@ -201,7 +205,7 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_CEvoteTable'
 CREATE INDEX [IX_FK_CEvoteTable]
-ON [dbo].[voteTables]
+ON [dbo].[VoteTables]
     ([CEId]);
 GO
 
@@ -209,7 +213,7 @@ GO
 ALTER TABLE [dbo].[CEs]
 ADD CONSTRAINT [FK_sectorCE]
     FOREIGN KEY ([sectorId])
-    REFERENCES [dbo].[sectors]
+    REFERENCES [dbo].[Sectors]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
@@ -220,8 +224,8 @@ ON [dbo].[CEs]
     ([sectorId]);
 GO
 
--- Creating foreign key on [RegionId] in table 'sectors'
-ALTER TABLE [dbo].[sectors]
+-- Creating foreign key on [RegionId] in table 'Sectors'
+ALTER TABLE [dbo].[Sectors]
 ADD CONSTRAINT [FK_Regionsector]
     FOREIGN KEY ([RegionId])
     REFERENCES [dbo].[Regions]
@@ -231,7 +235,7 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Regionsector'
 CREATE INDEX [IX_FK_Regionsector]
-ON [dbo].[sectors]
+ON [dbo].[Sectors]
     ([RegionId]);
 GO
 

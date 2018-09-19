@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace voteManager
+namespace VoteManager
 {
     using System;
     using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace voteManager
     public partial class Partido
     {
         public int Id { get; set; }
-        public string name { get; set; }
+        public string Name { get; set; }
+        public bool Enabled { get; set; }
     }
 }

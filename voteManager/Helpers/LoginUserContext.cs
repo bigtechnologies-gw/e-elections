@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace voteManager.Helpers
+namespace VoteManager.Helpers
 {
     public class LoginUserContext
     {
+        public voteAppEntities VoteDbContext { get; set; }
+
         public DateTime LoginTime { get; set; }
 
         public User User { get; set; }

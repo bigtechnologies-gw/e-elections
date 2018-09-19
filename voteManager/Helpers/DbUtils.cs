@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace voteManager.Helpers
+namespace VoteManager.Helpers
 {
     public static class DbUtils
     {
@@ -27,7 +27,7 @@ namespace voteManager.Helpers
 
             var listCardinalDirections = new List<string>
             {
-                "North", "East", "South", "West", "N/A"
+                "North", "East", "South", "SAB",
             };
 
             // geo data
@@ -51,7 +51,6 @@ namespace voteManager.Helpers
                 AppEntities.Provinces.AddRange(listCardinalDirections.Select(cd => new Province { Name = cd }).ToList());
                 AppEntities.SaveChanges();
             }
-            AppEntities.SaveChanges();
 
             // insert all Regions if not already in db
 
@@ -153,14 +152,16 @@ namespace voteManager.Helpers
 
                     foreach (var sector in data.Value)
                     {
-                        var sec = new sector
+                        var sec = new Sector
                         {
-                            name = sector,
+                            Name = sector,
                         };
-
                         sec.CEs.Add(new CE
                         {
-                            voteTables = { new voteTable() }
+                            Name = string.Empty,
+                            voteTables = { new VoteTable() {
+                                Name = string.Empty,
+                            }}
                         });
                         region.sectors.Add(sec);
                     }
@@ -176,40 +177,41 @@ namespace voteManager.Helpers
             // push changed to db
             //_voteModel.SaveChanges();
 
-            var listPartidos = new List<string>
+            var defaultPartidos = new List<string>
             {
                 "PRS", "PAIGC", "PSP", "PPP", "PPA"
             };
 
             if (!AppEntities.Partidos.Any())
             {
-                foreach (var partido in listPartidos)
+                foreach (var partido in defaultPartidos)
                 {
-                    var partidoModel = new partido()
+                    var partidoModel = new Partido()
                     {
-                        name = partido,
+                        Name = partido,
                     };
                     AppEntities.Partidos.Add(partidoModel);
                 }
             }
 
+            // ADD GUEST USER
             // add guest user (note: guest user will only be able to view and print the data.
-            if (!AppEntities.Users.Any(user => user.Name.Equals("guest", StringComparison.OrdinalIgnoreCase)))
-            {
-                // add usr guest
-                AppEntities.Users.Add(new User
-                {
-                    FullName = "Guest User",
-                    DateCreation = DateTime.Now,
-                    Enabled = true,
-                    Name = "guest",
-                    Password = "guest", // constant (no admin can change this password)
-                    ProvinceId = 0,
-                    Type = TypeUser.Guest,
-                    OwnerId = 0,
-                    Salt = string.Empty,
-                });
-            }
+            //if (!AppEntities.Users.Any(user => user.Type == TypeUser.Guest))
+            //{
+            //    // add usr guest
+            //    AppEntities.Users.Add(new User
+            //    {
+            //        FullName = "Guest User",
+            //        DateCreation = DateTime.Now,
+            //        Enabled = true,
+            //        Name = "guest",
+            //        Password = "guest", // constant (no admin can change this password)
+            //        ProvinceId = 0,
+            //        Type = TypeUser.Guest,
+            //        OwnerId = 0,
+            //        Salt = string.Empty,
+            //    });
+            //}
 
             AppEntities.SaveChanges();
             // System.ComponentModel.
