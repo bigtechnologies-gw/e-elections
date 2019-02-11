@@ -1,6 +1,7 @@
 ﻿using System.Linq;
+using System.Reflection;
 
-namespace VoteManager.Forms
+namespace EElections
 {
     public class DisplayItem<T>
     {
@@ -10,7 +11,7 @@ namespace VoteManager.Forms
 
         public DisplayItem(T obj)
         {
-            var propInfo = typeof(T).GetProperties().FirstOrDefault(prop => prop.Name.Equals("name", System.StringComparison.OrdinalIgnoreCase));
+            PropertyInfo propInfo = typeof(T).GetProperties().FirstOrDefault(prop => prop.Name.Equals("name", System.StringComparison.OrdinalIgnoreCase));
             if (propInfo == null)
             {
                 propInfo = obj.GetType().GetProperties().FirstOrDefault(prop => prop.Name.Equals("id", System.StringComparison.OrdinalIgnoreCase));
@@ -18,6 +19,25 @@ namespace VoteManager.Forms
             Item = obj;
             // extract value
             DisplayProperty = propInfo?.GetValue(obj).ToString();
+
+            // mapping due to translation to portuguese
+            switch (DisplayProperty)
+            {
+                case "North":
+                    DisplayProperty = "Norte";
+                    break;
+                case "South":
+                    DisplayProperty = "Sul";
+                    break;
+                case "West":
+                    DisplayProperty = "Oeste";
+                    break;
+                case "East":
+                    DisplayProperty = "Leste";
+                    break;
+                    // SAB is already in portuguese.
+            }
+
         }
 
         public override string ToString() => DisplayProperty;

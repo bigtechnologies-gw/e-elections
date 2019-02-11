@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VoteManager
+namespace EElections
 {
     using System;
     using System.Collections.Generic;
@@ -16,6 +16,5 @@ namespace VoteManager
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int Admin { get; set; }
     }
 }

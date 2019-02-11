@@ -1,20 +1,30 @@
 ﻿using System;
 
-namespace VoteManager.Helpers
+namespace EElections.Helpers
 {
     public class LoginUserContext
     {
+        /// <summary>
+        /// User ID
+        /// </summary>
+        public int ID { get; set; }
+
+        /// <summary>
+        /// Username
+        /// </summary>
+        public string Name { get; set; }
+
         public voteAppEntities VoteDbContext { get; set; }
 
         public DateTime LoginTime { get; set; }
 
-        public User User { get; set; }
+        // NOT UPDATING IN DATABASE WHEN SAVECHANGES
+        //public User User { get; set; }
 
         public string MachineName { get; set; }
 
-        public LoginUserContext(User user)
+        public LoginUserContext()
         {
-            User = user;
             LoginTime = DateTime.Now;
             MachineName = Environment.MachineName;
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace VoteManager.Helpers
+namespace EElections.Helpers
 {
     public static class DbUtils
     {
@@ -25,13 +25,13 @@ namespace VoteManager.Helpers
             //    throw new Exception("No access right!");
             //}
 
-            var listCardinalDirections = new List<string>
+            List<string> listCardinalDirections = new List<string>
             {
                 "North", "East", "South", "SAB",
             };
 
             // geo data
-            var datas = new Dictionary<string, List<string>>
+            Dictionary<string, List<string>> datas = new Dictionary<string, List<string>>
             {
                 // source: https://en.wikipedia.org/wiki/Sectors_of_Guinea-Bissau
                 ["Quinara:S"] = new List<string> { "Tite", "Buba", "Empada", "Fulacunda" }, // south
@@ -54,17 +54,18 @@ namespace VoteManager.Helpers
 
             // insert all Regions if not already in db
 
-            var listCe = new List<string>
+            List<string> listCe = new List<string>
             {
                 "CE-01", "CE-02", "CE-03", "CE-04"
             };
 
-            var voteTableTemp = new List<string>
+            List<string> voteTableTemp = new List<string>
             {
                 "VT-01","VT-02","VT-03","VT-04","VT-05",
             };
 
-            Func<string, string, bool> CheckFunction = (string p, string pattern) => p.StartsWith(pattern, StringComparison.OrdinalIgnoreCase);
+            // local function
+            bool CheckFunction(string p, string pattern) => p.StartsWith(pattern, StringComparison.OrdinalIgnoreCase);
 
             //var tempRegion = new Region
             //{
@@ -91,13 +92,13 @@ namespace VoteManager.Helpers
             if (!AppEntities.Regions.Any())
             {
                 // Regions -> sectors -> ce -> table
-                foreach (var data in datas)
+                foreach (KeyValuePair<string, List<string>> data in datas)
                 {
                     string[] regionProvince = data.Key.Split(':');
                     string regionName = regionProvince[0];
                     string province = regionProvince.Length > 1 ? regionProvince[1] : string.Empty;
 
-                    var region = new Region()
+                    Region region = new Region()
                     {
                         Name = regionName
                     };
@@ -108,9 +109,9 @@ namespace VoteManager.Helpers
                     {
                         // UNDONE: optimze
                         case "N":
-                            foreach (var item in AppEntities.Provinces)
+                            foreach (Province item in AppEntities.Provinces)
                             {
-                                if (CheckFunction.Invoke(item.Name, "n"))
+                                if (CheckFunction(item.Name, "n"))
                                 {
                                     region.idProvince = item.Id;
                                 }
@@ -119,9 +120,9 @@ namespace VoteManager.Helpers
 
                         case "S":
                             //_voteModel.Provinces.First(p => p.Name.StartsWith("S", StringComparison.Ordinal));
-                            foreach (var item in AppEntities.Provinces)
+                            foreach (Province item in AppEntities.Provinces)
                             {
-                                if (CheckFunction.Invoke(item.Name, "s"))
+                                if (CheckFunction(item.Name, "s"))
                                 {
                                     region.idProvince = item.Id;
                                 }
@@ -129,9 +130,9 @@ namespace VoteManager.Helpers
                             break;
 
                         case "W":
-                            foreach (var item in AppEntities.Provinces)
+                            foreach (Province item in AppEntities.Provinces)
                             {
-                                if (CheckFunction.Invoke(item.Name, "w"))
+                                if (CheckFunction(item.Name, "w"))
                                 {
                                     region.idProvince = item.Id;
                                 }
@@ -139,9 +140,9 @@ namespace VoteManager.Helpers
                             break;
 
                         case "E":
-                            foreach (var item in AppEntities.Provinces)
+                            foreach (Province item in AppEntities.Provinces)
                             {
-                                if (CheckFunction.Invoke(item.Name, "e"))
+                                if (CheckFunction(item.Name, "e"))
                                 {
                                     region.idProvince = item.Id;
                                 }
@@ -150,9 +151,9 @@ namespace VoteManager.Helpers
                             //_voteModel.Provinces.First(p => p.Name.StartsWith("B", StringComparison.Ordinal) || p.Name.StartsWith("S", StringComparison.Ordinal)); //.Region = Region;
                     }
 
-                    foreach (var sector in data.Value)
+                    foreach (string sector in data.Value)
                     {
-                        var sec = new Sector
+                        Sector sec = new Sector
                         {
                             Name = sector,
                         };
@@ -177,16 +178,16 @@ namespace VoteManager.Helpers
             // push changed to db
             //_voteModel.SaveChanges();
 
-            var defaultPartidos = new List<string>
+            List<string> defaultPartidos = new List<string>
             {
                 "PRS", "PAIGC", "PSP", "PPP", "PPA"
             };
 
             if (!AppEntities.Partidos.Any())
             {
-                foreach (var partido in defaultPartidos)
+                foreach (string partido in defaultPartidos)
                 {
-                    var partidoModel = new Partido()
+                    Partido partidoModel = new Partido()
                     {
                         Name = partido,
                     };
@@ -236,5 +237,51 @@ namespace VoteManager.Helpers
             //}
         }
 
+        public static void GenerateVote()
+        {
+            voteAppEntities DbContext = AppEntities;
+            Random rand = new Random(12343);
+
+            // p * r * s * ce * vt
+            foreach (Partido partie in DbContext.Partidos)
+            {
+                foreach (Region region in DbContext.Regions)
+                {
+                    foreach (Sector sector in region.sectors)
+                    {
+                        foreach (CE ce in sector.CEs)
+                        {
+                            foreach (VoteTable table in ce.voteTables)
+                            {
+                                //var vote = DbContext.Votes.Create();
+                                //vote.idCE = ce.Id;
+                                //vote.idPartido = partie.Id;
+                                //vote.idRegion = region.Id;
+                                //vote.idSector = sector.Id;
+                                //vote.idVoteTable = table.Id;
+                                //vote.voteData = rand.Next(240, 67992);
+                                //vote.provinceId = region.idProvince;
+
+                                int data = rand.Next(2323, 697333);
+                                Vote vote = new Vote
+                                {
+                                    idCE = ce.Id,
+                                    idPartido = partie.Id,
+                                    idRegion = region.Id,
+                                    idSector = sector.Id,
+                                    idVoteTable = table.Id,
+                                    provinceId = region.idProvince,
+                                    voteData = data,
+                                };
+
+                                DbContext.Votes.Add(vote);
+                            }
+                        }
+                    }
+                }
+            }
+
+            DbContext.SaveChanges();
+        }
     }
 }

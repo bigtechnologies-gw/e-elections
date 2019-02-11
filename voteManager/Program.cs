@@ -1,10 +1,11 @@
-﻿using System;
+﻿using EElections.Forms;
+using EElections.Helpers;
+using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
-using VoteManager.Forms;
-using VoteManager.Helpers;
 
-namespace VoteManager
+namespace EElections
 {
     internal static class Program
     {
@@ -20,49 +21,62 @@ namespace VoteManager
             try
             {
                 // may throw exception if its doesn' find a database
-                var entities = DbUtils.AppEntities;
+                voteAppEntities entities = DbUtils.AppEntities;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("NO DATABASE FOUND");
+                MessageBox.Show("NOT CONNECTED TO A DATABASE!", "MISSING DATA", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Trace.WriteLine(ex.Message);
-                //return;
+                return;
             }
-            bool isReady = false;
-            if (!IsActivated())
+
+            bool isLicensed = RegistryUtils.IsLicensed();
+
+            if (!isLicensed)
             {
                 // check if app is already activated through windows registry
-                var enterLicense = new EnterLicense();
-                Application.Run(enterLicense);
-                isReady = enterLicense.IsActivated;
+                using (LicenseForm enterLicense = new LicenseForm())
+                {
+                    //enterLicense.ShowDialog();
+                    Application.Run(enterLicense);
+                    isLicensed = enterLicense.DialogResult == DialogResult.OK;
+                }
             }
-            else
+
+            // invalid license
+            if (!isLicensed)
             {
-                isReady = true;
+                return;
             }
 
-            // TODO: Check for atleast one user?
-#if DEBUG
-            isReady = true;
-#else
-            isReady = false;
-#endif
-
-            if (isReady)
+            // if there is at least one user (superadmin) show the login form
+            if (DbUtils.AppEntities.Users.Any(user => user.Type == TypeUser.SuperAdmin) == false)
             {
-                // show main
-                Application.Run(new LoginForm());
+                CreateAdminConfigurations configs = new CreateAdminConfigurations
+                {
+                    Title = "Create super admin!",
+                    TypeUser = TypeUser.SuperAdmin
+                };
+                bool showLoginForm = false;
+                //User loginUser = null;
+                using (CreateAdminForm formCreateSuperAdmin = new CreateAdminForm(configs))
+                {
+                    if (formCreateSuperAdmin.ShowDialog() == DialogResult.OK)
+                    {
+                        showLoginForm = formCreateSuperAdmin.User != null;
+                    }
+                }
+                if (showLoginForm)
+                {
+                    using (CustomForm customForm = new CustomForm())
+                    {
+                        customForm.ShowDialog();
+                    }
+                }
             }
-            else
-            {
 
-            }
-        }
+            Application.Run(new LoginForm());
 
-        private static bool IsActivated()
-        {
-            // check through registry
-            return false;
         }
     }
 }

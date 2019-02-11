@@ -1,5 +1,3 @@
-C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\obj\Debug\DataSampleBuilder.csprojAssemblyReference.cache
-C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\obj\Debug\DataSampleBuilder.csproj.CoreCompileInputs.cache
 C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\bin\Debug\DataSampleBuilder.exe.config
 C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\bin\Debug\DataSampleBuilder.exe
 C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\bin\Debug\DataSampleBuilder.pdb
@@ -7,6 +5,8 @@ C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\bin\Debug\Entity
 C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\bin\Debug\EntityFramework.SqlServer.dll
 C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\bin\Debug\EntityFramework.xml
 C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\obj\Debug\DataSampleBuilder.csprojAssemblyReference.cache
+C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\obj\Debug\DataSampleBuilder.csproj.CoreCompileInputs.cache
 C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\obj\Debug\DataSampleBuilder.csproj.CopyComplete
 C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\obj\Debug\DataSampleBuilder.exe
 C:\Users\bigtech-dev\source\repos\voteManager\DataSampleBuilder\obj\Debug\DataSampleBuilder.pdb

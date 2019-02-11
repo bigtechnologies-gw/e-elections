@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VoteManager
+namespace EElections
 {
     using System;
     using System.Data.Entity;

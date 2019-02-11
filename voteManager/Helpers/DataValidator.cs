@@ -1,14 +1,31 @@
-﻿namespace VoteManager
+﻿using System.Linq;
+
+namespace EElections.Helpers
 {
     public static class DataValidator
     {
         public static bool IsValidPassword(string password)
         {
             password = password.Trim();
+#if !DEBUG
+
             if (string.IsNullOrEmpty(password))
             {
                 return false;
             }
+
+            //  check if password contain a letter a symbol, a number
+            if (password.Any(ch => char.IsLetter(ch)) == false)
+            {
+                return false;
+            }
+
+            if (password.Any(ch => char.IsDigit(ch)) == false)
+            {
+                return false;
+            } 
+#endif
+
             return true;
         }
 
@@ -44,13 +61,22 @@
             {
                 return false;
             }
+            // must have atleast one letter.
+            if (!userName.Any(c => char.IsLetter(c)))
+            {
+                return false;
+            }
             return true;
         }
 
-        public static bool IsValidName(string name)
+        public static bool IsValidFullName(string name)
         {
             name = name.Trim();
             if (string.IsNullOrEmpty(name))
+            {
+                return false;
+            }
+            if (name.Length > 25)
             {
                 return false;
             }

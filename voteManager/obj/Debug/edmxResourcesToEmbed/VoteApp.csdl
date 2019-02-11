@@ -113,7 +113,6 @@
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
-    <Property Name="Admin" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="User">
     <Key>

@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VoteManager.Entity;
 
-namespace VoteManager
+namespace EElections.Helpers
 {
     // note: this is the base class for all "Partidos"
     public abstract class Controller // TODO: Rename to match the context of  super/base class

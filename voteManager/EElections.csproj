@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F1E7531D-8368-4BDC-B37C-49F82AD64B60}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>EElections</RootNamespace>
+    <AssemblyName>e-Vote</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts.WinForms, Version=0.9.7.1, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.WinForms.0.9.7.1\lib\net45\LiveCharts.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms.DataVisualization, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Chart.Controls.4.7.2046\lib\net35\System.Windows.Forms.DataVisualization.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms.DataVisualization.Design, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Chart.Controls.4.7.2046\lib\net35\System.Windows.Forms.DataVisualization.Design.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bases\BaseEditEntity.cs" />
+    <Compile Include="CE.cs">
+      <DependentUpon>VoteApp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ComboBoxItem.cs" />
+    <Compile Include="Configurations.cs" />
+    <Compile Include="Enums\DisplayType.cs" />
+    <Compile Include="Forms\About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ConfigMP.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ConfigMP.Designer.cs">
+      <DependentUpon>ConfigMP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ConfirmVote.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ConfirmVote.Designer.cs">
+      <DependentUpon>ConfirmVote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CustomForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CustomForm.Designer.cs">
+      <DependentUpon>CustomForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CreateAdmins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CreateAdmins.Designer.cs">
+      <DependentUpon>CreateAdmins.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Edit\EditCE.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Edit\EditCE.Designer.cs">
+      <DependentUpon>EditCE.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Edit\EditParties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Edit\EditParties.Designer.cs">
+      <DependentUpon>EditParties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Edit\EditVotingTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Edit\EditVotingTable.Designer.cs">
+      <DependentUpon>EditVotingTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Edit\ManageUsers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Edit\ManageUsers.Designer.cs">
+      <DependentUpon>ManageUsers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LicenseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LicenseForm.Designer.cs">
+      <DependentUpon>LicenseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ResetPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ResetPassword.Designer.cs">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Statistics\CNEVoteStats.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Statistics\CNEVoteStats.Designer.cs">
+      <DependentUpon>CNEVoteStats.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Statistics\GeneralStats.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Statistics\GeneralStats.Designer.cs">
+      <DependentUpon>GeneralStats.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Statistics\ListStatistics.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Statistics\ListStatistics.Designer.cs">
+      <DependentUpon>ListStatistics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LoadingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoadingForm.Designer.cs">
+      <DependentUpon>LoadingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StatsDisplayType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StatsDisplayType.Designer.cs">
+      <DependentUpon>StatsDisplayType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\Controller.cs" />
+    <Compile Include="Helpers\DataValidator.cs" />
+    <Compile Include="Forms\Edit\EditVote.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Edit\EditVote.Designer.cs">
+      <DependentUpon>EditVote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\Region.cs" />
+    <Compile Include="Entity\Sector.cs" />
+    <Compile Include="Forms\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\DbUtils.cs" />
+    <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Helpers\FileUtils.cs" />
+    <Compile Include="Helpers\LicenseStore.cs" />
+    <Compile Include="Helpers\LoginUserContext.cs" />
+    <Compile Include="Helpers\RegistryUtils.cs" />
+    <Compile Include="Helpers\UIUtils.cs" />
+    <Compile Include="Interfaces\ICustomizable.cs" />
+    <Compile Include="Partido.cs">
+      <DependentUpon>VoteApp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PartidoInfo.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Forms\Statistics\GraphStatistics.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Statistics\GraphStatistics.Designer.cs">
+      <DependentUpon>GraphStatistics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\PwdUtils.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Province.cs">
+      <DependentUpon>VoteApp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Region.cs">
+      <DependentUpon>VoteApp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sector.cs">
+      <DependentUpon>VoteApp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TypeUser.cs">
+      <DependentUpon>VoteApp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="User.cs">
+      <DependentUpon>VoteApp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Vote.cs">
+      <DependentUpon>VoteApp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VoteApp.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VoteApp.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VoteApp.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VoteApp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VoteApp.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VoteApp.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="VoteTable.cs">
+      <DependentUpon>VoteApp.tt</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Forms\About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ConfigMP.resx">
+      <DependentUpon>ConfigMP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ConfirmVote.resx">
+      <DependentUpon>ConfirmVote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CustomForm.resx">
+      <DependentUpon>CustomForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CreateAdmins.resx">
+      <DependentUpon>CreateAdmins.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Edit\EditCE.resx">
+      <DependentUpon>EditCE.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Edit\EditVote.resx">
+      <DependentUpon>EditVote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Edit\EditVotingTable.resx">
+      <DependentUpon>EditVotingTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ResetPassword.resx">
+      <DependentUpon>ResetPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Statistics\CNEVoteStats.resx">
+      <DependentUpon>CNEVoteStats.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Statistics\GeneralStats.resx">
+      <DependentUpon>GeneralStats.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Statistics\ListStatistics.resx">
+      <DependentUpon>ListStatistics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LoadingForm.resx">
+      <DependentUpon>LoadingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Edit\EditParties.resx">
+      <DependentUpon>EditParties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Edit\ManageUsers.resx">
+      <DependentUpon>ManageUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LicenseForm.resx">
+      <DependentUpon>LicenseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Statistics\GraphStatistics.resx">
+      <DependentUpon>GraphStatistics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StatsDisplayType.resx">
+      <DependentUpon>StatsDisplayType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="app.manifest" />
+    <None Include="packages.config" />
+    <EntityDeploy Include="VoteApp.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>VoteApp.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="VoteApp.edmx.diagram">
+      <DependentUpon>VoteApp.edmx</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-login-filled-50.png" />
+    <None Include="Resources\icons8-person-80.png" />
+    <None Include="Resources\icons8-certificate-96.png" />
+    <None Include="Resources\icons8-maintenance-50.png" />
+    <None Include="Resources\icons8-statistics-30.png" />
+    <None Include="Resources\icons8-paint-palette-64.png" />
+    <None Include="Resources\db-icon.png" />
+    <None Include="Resources\Statistics_logo.png" />
+    <None Include="Resources\Ok_96px.png" />
+    <None Include="Resources\Warning Shield_96px.png" />
+    <None Include="Resources\VoteManger.bmp" />
+    <None Include="Resources\icons8_Elections_64.png" />
+    <None Include="Resources\Elections_100px.png" />
+    <None Include="Resources\Ok_96px1.png" />
+    <None Include="Resources\Brasao_2.png" />
+    <None Include="Resources\icons8_Elections_48.png" />
+    <None Include="Resources\E-vote-3.png" />
+    <None Include="Resources\E-vote-icon2.png" />
+    <None Include="Resources\E-vote-31.png" />
+    <None Include="Resources\E-vote-icon21.png" />
+    <Content Include="todo.txt" />
+    <Content Include="VoteApp.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>VoteApp.edmx</DependentUpon>
+      <LastGenOutput>VoteApp.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="VoteApp.edmx.sql" />
+    <Content Include="VoteApp.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>VoteApp.edmx</DependentUpon>
+      <LastGenOutput>VoteApp.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -81,7 +81,6 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Admin" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Users">
     <Key>

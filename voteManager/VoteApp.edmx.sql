@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 09/18/2018 10:39:14
+-- Date Created: 11/12/2018 11:52:33
 -- Generated from EDMX file: C:\Users\bigtech-dev\source\repos\voteManager\voteManager\VoteApp.edmx
 -- --------------------------------------------------
 
@@ -110,8 +110,7 @@ GO
 -- Creating table 'Provinces'
 CREATE TABLE [dbo].[Provinces] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [Name] nvarchar(max)  NOT NULL,
-    [Admin] int  NOT NULL
+    [Name] nvarchar(max)  NOT NULL
 );
 GO
 

@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VoteAppModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="CEs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="sectorId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Partidos">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Enabled" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Provinces">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Regions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="idProvince" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Sectors">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="RegionId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FullName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Enabled" Type="bit" Nullable="false" />
+    <Property Name="DateCreation" Type="datetime" Nullable="false" />
+    <Property Name="OwnerId" Type="int" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="ProvinceId" Type="int" Nullable="false" />
+    <Property Name="Salt" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Votes">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="idRegion" />
+      <PropertyRef Name="idSector" />
+      <PropertyRef Name="idCE" />
+      <PropertyRef Name="idVoteTable" />
+      <PropertyRef Name="idPartido" />
+      <PropertyRef Name="provinceId" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="idRegion" Type="int" Nullable="false" />
+    <Property Name="idSector" Type="int" Nullable="false" />
+    <Property Name="idCE" Type="int" Nullable="false" />
+    <Property Name="idVoteTable" Type="int" Nullable="false" />
+    <Property Name="idPartido" Type="int" Nullable="false" />
+    <Property Name="provinceId" Type="int" Nullable="false" />
+    <Property Name="voteData" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VoteTables">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CEId" Type="int" Nullable="false" />
+    <Property Name="TotalRegisted" Type="int" Nullable="false" />
+    <Property Name="InvalidVotes" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_CEvoteTable">
+    <End Role="CEs" Type="Self.CEs" Multiplicity="1" />
+    <End Role="VoteTables" Type="Self.VoteTables" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CEs">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VoteTables">
+        <PropertyRef Name="CEId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Regionsector">
+    <End Role="Regions" Type="Self.Regions" Multiplicity="1" />
+    <End Role="Sectors" Type="Self.Sectors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Regions">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Sectors">
+        <PropertyRef Name="RegionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_sectorCE">
+    <End Role="Sectors" Type="Self.Sectors" Multiplicity="1" />
+    <End Role="CEs" Type="Self.CEs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sectors">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CEs">
+        <PropertyRef Name="sectorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="VoteAppModelStoreContainer">
+    <EntitySet Name="CEs" EntityType="Self.CEs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Partidos" EntityType="Self.Partidos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Provinces" EntityType="Self.Provinces" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Regions" EntityType="Self.Regions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Sectors" EntityType="Self.Sectors" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Votes" EntityType="Self.Votes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VoteTables" EntityType="Self.VoteTables" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_CEvoteTable" Association="Self.FK_CEvoteTable">
+      <End Role="CEs" EntitySet="CEs" />
+      <End Role="VoteTables" EntitySet="VoteTables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Regionsector" Association="Self.FK_Regionsector">
+      <End Role="Regions" EntitySet="Regions" />
+      <End Role="Sectors" EntitySet="Sectors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_sectorCE" Association="Self.FK_sectorCE">
+      <End Role="Sectors" EntitySet="Sectors" />
+      <End Role="CEs" EntitySet="CEs" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

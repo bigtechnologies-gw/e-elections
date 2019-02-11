@@ -27,29 +27,28 @@ namespace DataSampleBuilder
 
     internal class Program
     {
-        private static readonly VoteAppModel DbContext = new VoteAppModel();
+        private static readonly VoteAppEntities DbContext = new VoteAppEntities();
 
         private static void Main(string[] args)
         {
+            foreach (var vote in DbContext.Votes.Where(v => v.provinceId == 0))
+            {
+                DbContext.Votes.Remove(vote);
+            }
+            DbContext.SaveChanges();
+            PopulateDB();
+        }
+
+        private static void PopulateDB()
+        {
+            Console.WriteLine("Clearing db");
             ClearDataBase();
 
-            var provinces = new List<Province>()
-            {
-                new Province {Name = "North"},
-                new Province {Name = "South"},
-                new Province {Name = "East"},
-                new Province {Name = "SAB"},
-            };
-
-
-            // provinces
-            foreach (var pro in provinces)
-            {
-                DbContext.Provinces.Add(pro);
-            }
-
+            Console.WriteLine("Building provinces...");
+            BuildProvinces();
             DbContext.SaveChanges();
 
+            Console.WriteLine("Building regions...");
             int idNorth = DbContext.Provinces.First(p => p.Name.Equals("north", StringComparison.OrdinalIgnoreCase)).Id;
             int idSouth = DbContext.Provinces.First(p => p.Name.Equals("south", StringComparison.OrdinalIgnoreCase)).Id;
             int idEast = DbContext.Provinces.First(p => p.Name.Equals("east", StringComparison.OrdinalIgnoreCase)).Id;
@@ -175,12 +174,22 @@ namespace DataSampleBuilder
 
             // flush into db
             DbContext.SaveChanges();
+
+            Console.WriteLine("Building CE...");
             PopulateCE();
+
+            Console.WriteLine("Building voting table...");
             PopulateVoteTable();
+
+            Console.WriteLine("Building parties...");
             PopulatePartido();
+
+            Console.WriteLine("Building vote...");
             PopulateVote();
+
             DbContext.SaveChanges();
 
+            Console.WriteLine("All done!");
             // provinces -> regions -> sectors
 
             // build xml
@@ -201,6 +210,24 @@ namespace DataSampleBuilder
             //        var elRegion = new XElement("region")
             //    }
             //}
+        }
+
+        private static void BuildProvinces()
+        {
+            var provinces = new List<Province>()
+            {
+                new Province {Name = "North"},
+                new Province {Name = "South"},
+                new Province {Name = "East"},
+                new Province {Name = "SAB"},
+            };
+
+
+            // provinces
+            foreach (var pro in provinces)
+            {
+                DbContext.Provinces.Add(pro);
+            }
         }
 
         private static void PopulateCE()
@@ -258,6 +285,60 @@ namespace DataSampleBuilder
             DbContext.SaveChanges();
         }
 
+        private static void PopulateVote()
+        {
+            //DbContext.Configuration.EnsureTransactionsForFunctionsAndCommands = false;
+            DbContext.SaveChanges();
+            var rand = new Random(12343);
+
+            // p * r * s * ce * vt
+            foreach (var partie in DbContext.Partidos.Local)
+            {
+                foreach (var region in DbContext.Regions.Local)
+                {
+                    foreach (var sector in region.Sectors)
+                    {
+                        foreach (var ce in sector.CEs)
+                        {
+
+                            var votesList = new List<Vote>();
+                            foreach (var table in ce.VoteTables)
+                            {
+                                //var vote = DbContext.Votes.Create();
+                                //vote.idCE = ce.Id;
+                                //vote.idPartido = partie.Id;
+                                //vote.idRegion = region.Id;
+                                //vote.idSector = sector.Id;
+                                //vote.idVoteTable = table.Id;
+                                //vote.voteData = rand.Next(240, 67992);
+                                //vote.provinceId = region.idProvince;
+
+                                var data = rand.Next(2323, 697333);
+                                votesList.Add(new Vote
+                                {
+                                    idCE = ce.Id,
+                                    idPartido = partie.Id,
+                                    idRegion = region.Id,
+                                    idSector = sector.Id,
+                                    idVoteTable = table.Id,
+                                    provinceId = region.idProvince,
+                                    voteData = data,
+                                });
+                            }
+
+                            DbContext.Votes.AddRange(votesList);
+
+                            //DbContext.SaveChanges();
+
+                        }
+                    }
+                }
+            }
+
+            DbContext.SaveChanges();
+            //DbContext.Configuration.EnsureTransactionsForFunctionsAndCommands = false
+        }
+
         private static void PopulatePartido()
         {
             var partidos = new List<string>
@@ -275,11 +356,6 @@ namespace DataSampleBuilder
             }
 
             DbContext.SaveChanges();
-        }
-
-        private static void PopulateVote()
-        {
-
         }
 
         private static void ClearDataBase()
@@ -316,11 +392,6 @@ namespace DataSampleBuilder
             }
 
             DbContext.SaveChanges();
-        }
-
-        private static void BuildProvinces()
-        {
-
         }
 
 

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace VoteManager.Entity
+namespace EElections.Entity
 {
     class Region
     {
@@ -32,7 +28,7 @@ namespace VoteManager.Entity
             {
                 decimal totalVote = 0M;
 
-                foreach (var sector in Sectors)
+                foreach (Sector sector in Sectors)
                 {
                     totalVote += sector.Vote;
                 }

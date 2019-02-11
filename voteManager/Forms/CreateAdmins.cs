@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using EElections.Helpers;
 
-namespace VoteManager.Forms
+namespace EElections.Forms
 {
     public partial class CreateAdminForm : Form
     {
@@ -35,9 +36,9 @@ namespace VoteManager.Forms
             }
             else
             {
-                using (var dbContext = new voteAppEntities())
+                using (voteAppEntities dbContext = new voteAppEntities())
                 {
-                    foreach (var province in dbContext.Provinces)
+                    foreach (Province province in dbContext.Provinces)
                     {
                         comboBoxProvince.Items.Add(new DisplayItem<Province>(province));
                     }
@@ -45,7 +46,7 @@ namespace VoteManager.Forms
             }
         }
 
-        private void buttonSubmit_Click(object sender, EventArgs e)
+        private void ButtonSubmit_Click(object sender, EventArgs e)
         {
             // validation
             string userName = textBoxUserName.Text;
@@ -55,43 +56,40 @@ namespace VoteManager.Forms
 
             if (!DataValidator.IsValidUserName(userName))
             {
-
                 return;
             }
-            if (!DataValidator.IsValidName(fullName))
+            if (!DataValidator.IsValidFullName(fullName))
             {
-
                 return;
             }
             if (!DataValidator.IsValidPassword(password, passwordConfirm))
             {
-
                 return;
             }
 
-
             bool isProvinceAdmin = _configs.TypeUser == TypeUser.Admin;
-
             if (isProvinceAdmin && comboBoxProvince.SelectedItem == null)
             {
                 return;
             }
 
+            (string hashPassword, string salt) = PwdUtils.GetSaltyPassword(password);
+
             // create new super admin
-            var newUser = new User
+            User newUser = new User
             {
                 DateCreation = DateTime.Now,
                 FullName = fullName,
-                Password = password, // todo: hash
+                Password = hashPassword,
+                Salt = salt,
                 Enabled = true,
                 Name = userName,
-                Salt = string.Empty,
                 Type = isProvinceAdmin ? TypeUser.Admin : TypeUser.SuperAdmin,
                 OwnerId = 0,
                 ProvinceId = isProvinceAdmin ? ((DisplayItem<Province>)comboBoxProvince.SelectedItem).Item.Id : 0
             };
 
-            using (var dbContext = new voteAppEntities())
+            using (voteAppEntities dbContext = new voteAppEntities())
             {
                 // check if admin for the selected province doesn't already exits
                 if (_configs.TypeUser == TypeUser.Admin)
@@ -99,7 +97,7 @@ namespace VoteManager.Forms
                     if (dbContext.Users.Any(user => user.ProvinceId == newUser.ProvinceId))
                     {
                         MessageBox.Show("Province already contain a admin, please choose another province");
-                        // diselect selected province
+                        // deselect selected province
                         return;
                     }
                 }
@@ -112,7 +110,7 @@ namespace VoteManager.Forms
 
             if (_configs.TypeUser == TypeUser.SuperAdmin)
             {
-                buttonButtonOK_Click(null, null);
+                ButtonButtonOK_Click(null, null);
             }
             else
             {
@@ -120,25 +118,31 @@ namespace VoteManager.Forms
             }
         }
 
-        private void buttonButtonOK_Click(object sender, EventArgs e)
+        private void ButtonButtonOK_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
         }
 
         private void ClearControls()
         {
-            foreach (var control in groupBox1.Controls)
+            foreach (TextBox tb in groupBox1.Controls.OfType<TextBox>())
             {
-                if (control is TextBox)
-                {
-                    ((TextBox)control).Text = string.Empty;
-                }
-
-                if (control is ComboBox)
-                {
-
-                }
+                tb.Text = string.Empty;
             }
+
+            //foreach (var control in groupBox1.Controls)
+            //{
+            //    if (control is TextBox)
+            //    {
+            //        ((TextBox)control).Text = string.Empty;
+            //    }
+            //    if (control is ComboBox)
+            //    {
+            //        ComboBox cb = (ComboBox)control;
+            //        //cb.BindingContext
+            //        //cb.DisplayMember
+            //    }
+            //}
         }
 
         private void LayoutButtons()
@@ -149,11 +153,9 @@ namespace VoteManager.Forms
                 buttonButtonOK.Visible = false;
                 return;
             }
-
             buttonSubmit.Left = comboBoxProvince.Right + 10;
             buttonSubmit.Top = comboBoxProvince.Top;
-            buttonSubmit.Text = "Add";
-
+            buttonSubmit.Text = "Adicionar";
         }
 
     }

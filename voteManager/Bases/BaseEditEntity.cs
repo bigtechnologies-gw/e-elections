@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows.Forms;
-using VoteManager.Forms;
-using VoteManager.Helpers;
+using EElections.Helpers;
 
-namespace VoteManager.Bases
+namespace EElections.Bases
 {
     public abstract class BaseEditEntity
     {
         protected void InitUI(ComboBox cb)
         {
             cb.BeginUpdate();
-            foreach (var sector in DbUtils.AppEntities.Sectors.OrderBy(sector => sector.Name))
+            foreach (Sector sector in DbUtils.AppEntities.Sectors.OrderBy(sector => sector.Name))
             {
                 cb.Items.Add(new DisplayItem<Sector>(sector));
             }
@@ -30,8 +25,8 @@ namespace VoteManager.Bases
             }
             lb.BeginUpdate();
             lb.Items.Clear();
-            var selSector = ((DisplayItem<Sector>)cb.SelectedItem).Item;
-            foreach (var ce in selSector.CEs)
+            Sector selSector = ((DisplayItem<Sector>)cb.SelectedItem).Item;
+            foreach (CE ce in selSector.CEs)
             {
                 lb.Items.Add(ce.Name);
             }
